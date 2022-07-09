@@ -1,0 +1,188 @@
+.fieldLabel {
+width: 40%;
+float: left;
+}
+.fieldLabel span,.warsmoke,.err,.registerForm1 td span{
+color: #ff0000;
+margin-left: 3px;
+}
+.field {
+width: 60%;
+float: right;
+}
+.photoHome {
+width: 180px;
+height: 135px;
+background: url('../images/camera.png');
+background-repeat: no-repeat;
+border: 1px solid #fff;
+background-position: 30px 22px;
+text-align: center;
+padding: 15px;
+}
+
+.formFields {
+width: 100%;
+}
+.formItem {
+float: left;
+width: 100%;
+margin: 10px;
+
+}
+.selectBox
+{
+    border:1px solid #d4d4d4;
+    width:210px;
+}
+.tnc {
+float: left;
+margin-right: 20px;
+}
+
+.warning{
+color: red;
+}
+
+#registerAcc h4
+{
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.leftguest
+{
+    width:50%;
+    float: left;
+}
+.righthost
+{
+    width:50%;
+    float: left;
+}
+
+.hostProfile {
+width: 100px;
+height: 165px;
+float: left;
+text-align: center;
+margin-bottom: 107px;
+margin-right: 10px;
+}
+
+.pic {
+width: 30%;
+height: 180px;
+float: left;
+margin: 5px;
+text-align: center;
+}
+.otherDetails {
+width: 60%;
+float: left;
+}
+.hostDetails {
+width: 100%;
+}
+.priceShort {
+width: 60%;
+float: left;
+}
+.priceShort span
+{
+    font-weight: bold;
+}
+.priceShort li
+{
+    margin-left: 0px;
+}
+
+.acmodatnHome, .booking_section, .hostFamily
+{
+    width:30%;
+    float:left;
+    padding: 0 5px;
+    text-align: center;
+}
+.start_details
+{
+    width:100%;
+}
+
+.acmodatnHome
+{
+border-left: 1px solid #aaa;
+border-right: 1px solid #aaa;
+margin:0 5px;
+
+}
+
+.subDetail {
+margin: 12px 5px;
+}
+.subDetail label {
+font-weight: bold;
+}
+
+.subDetail ul li
+{
+    margin:0;
+    padding:3px 5px;
+    line-height: inherit;
+}
+
+#start
+{
+    min-height: 400px;
+}
+.photoH {
+float: left;
+width: 200px;
+height: 200px;
+}
+
+#photos {
+min-height: 250px;
+}
+.imgHost
+{
+    width: 100%;
+    height: 100%;
+}
+.ReviewSection
+{
+    margin:10px 0;
+}
+
+.ReviewMsg {
+float: left;
+margin-left: 15px;
+}
+.searchBox {
+width: 356px;
+margin: 0 auto;
+padding: 16px 0 46px 24px;
+border: 1px solid #ff2;
+border-radius: 10px;
+margin-bottom: 40px;
+}
+.rw {
+margin-top: 10px;
+margin-bottom: 10px;
+clear: both;
+}
+
+.rw div:first-child {
+float: left;
+width: 30%;
+
+}
+.rw div {
+float: left;
+width: 57%;
+margin-bottom: 10px;
+}
+.calndrAvl {
+float: right;
+margin-right: 56px;
+margin-top: 15px;
+}

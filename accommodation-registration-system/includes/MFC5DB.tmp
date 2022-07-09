@@ -1,0 +1,217 @@
+<?php 
+add_shortcode('guesthost', 'guesthostInfo');
+function guesthostInfo()
+      { 
+     $path=wp_upload_dir();
+     global $wpdb;
+?>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$("#frm").submit(function()
+		{
+			if($("#country").val()=="")
+			{
+				$("#country").css("color","red");
+			}
+			return false;
+		});
+	});
+</script>
+
+
+<div class="searchBox">
+    <form method="post" id="frm">
+    <div class="row1 rw">
+        <div ><label>Find</label></div>
+        <div>
+            <input type="radio" name="find" class="find" value="1" checked="checked" />Host Families with vacancy 
+            <input type="radio" name="find" class="find" value="2" />Guest for accommodation
+        </div>
+    </div>
+    <div class="row2 rw">
+        <div ><label>Location</label></div>
+        <div>
+            <input type="hidden" value="<?php echo site_url(); ?>" class="site"/>
+            <select name="country" id="country" style="width: 214px">
+                        <option value="" selected="selected">----Select Country----</option>
+                        <?php global $wpdb; $myrows = $wpdb->get_results( "SELECT * FROM country");?>
+                        <?php foreach( $myrows as $row ):?>
+                        <option value="<?php echo $row->id ?>"><?php echo $row->name?></option>
+                        <?php endforeach;?>
+                </select><br />
+                <select name="state" id="state" style="width: 214px">
+                        <option value="" selected="selected">-----Select State------</option>
+                        <?php global $wpdb; $myrows = $wpdb->get_results( "SELECT * FROM state");
+                       
+                        ?>
+                        <?php foreach( $myrows as $row ):?>
+                        <option value="<?php echo $row->id ?>"><?php echo $row->name?></option>
+                        <?php endforeach;?>
+                </select><br />
+                <select name="city" id="city" style="width: 214px">
+                        <option value="" selected="selected">----Select Suburb----</option>
+                </select>
+        </div>
+    </div>
+    <div class="row3 rw">
+        <div ><label>Arrival Date</label></div>
+        <div>
+            <input type="text" name="arrivalD" class="arrivalD" />
+        </div>
+    </div>
+    <div class="row4 rw">
+        <div ><label>Departure Date</label></div>
+        <div>
+            <input type="text" name="departureD" class="departureD" />
+        </div>
+    </div>
+    <div class="row5 rw">
+        <div>
+            <input type="submit" name="search" class="search" value="Search" />
+        </div>
+    </div>
+        </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+      <div class="leftguest">
+          <h1>Yourcheerworld guest Members</h1>
+          <?php
+          global $wpdb;
+          $guest = array();
+          $search1 = array();
+          $flag = 0;
+          if(isset($_REQUEST['search']))
+		  {
+             $o = new BookFunction;
+              
+             if($_REQUEST['find']== 2 ){
+				  $country=$_REQUEST['country'];
+				  $city=$_REQUEST['city'];
+				  $state=$_REQUEST['state'];
+				  $sql = "SELECT ID FROM $wpdb->prefix"."users";
+				  $ids = $wpdb->get_results($sql);
+              	  foreach ($ids as $id){
+                  	 if(user_can($id->ID,'clubmember')){
+                         $guestInfo = $o->getGuestInfo($id->ID);
+						 if($guestInfo[0]->country == $country || $guestInfo[0]->city== $city || $guestInfo[0]->state == $state
+                         || ($_REQUEST['arrivalD'] !='' && $_REQUEST['departureD'] !='' && strtotime($_REQUEST['arrivalD']) >=$guestInfo[0]->arrival || strtotime($_REQUEST['departureD']) <=$guestInfo[0]->departure))
+                              {
+                                      $search1[] = $id->ID;
+							  }
+                         }
+             	  }
+				  //echo "<pre>";print_r($search);echo "</pre>";
+              	  $guest['include'] = $search1;
+                  if(empty($guest['include'])){
+                  $flag = 1;    
+                  }
+                  }
+          }
+         if(!$_REQUEST['search'] || $_REQUEST['find']== 1 || ($_REQUEST['find'] == 2 && $country == 0 && $city == 0 && $state == 0)){
+                if($_REQUEST['find'] == 2 && $country == 0 && $city == 0 && $state == 0){
+                    $flag = 0;
+                }
+                $guesttable= $wpdb->prefix . 'guestreg';
+                $allguest="SELECT * from ".$guesttable;
+                $allTerms = $wpdb->get_results($allguest); 
+                foreach ($allTerms as $t){
+                    $search1[] = $t->guestid;
+                }
+                $guest['include'] = $search1;
+          }
+          
+                $myrows =get_users($guest);
+                foreach ($myrows as $allTerm) {
+                if($flag == 0 ){
+                echo '<div class="hostProfile">';
+                echo '<div class="profile"><a href="'.home_url().'/guest-details?id='.base64_encode($allTerm->ID).'"><img class="imgHost" src="'.$path['baseurl'].'/photo/'.get_user_meta($allTerm->ID,'media',TRUE).'"/></a></div>'; 
+                echo '<div class="user_name">'.$allTerm->user_login.'</div>';
+                $sql= "SELECT `name` from `city` where id=".get_user_meta($allTerm->ID,'city',TRUE);
+                //  echo $sql;
+                $cityarr=$wpdb->get_results($sql);
+                echo '<div class="user_city">'.$cityarr[0]->name.'</div>';
+                echo '</div>';
+                }    
+                }
+                if($flag == 1){
+                    echo '<h2><font color="red">No Guest Found</font></h2>';
+                }
+                
+          ?>
+      </div>
+
+
+
+      <div class="righthost">
+          <h1>Yourcheerworld host Members</h1>
+          <?php 
+          global $wpdb;
+          $host = array();
+          $search = array();
+          $flag2 = 0;
+          if(isset($_REQUEST['search']))
+		  {
+			 if($_REQUEST['find']==1)
+			 {
+				  $country=$_REQUEST['country'];
+				  $city=$_REQUEST['city'];
+				  $state=$_REQUEST['state'];
+				  $sql = "SELECT ID FROM $wpdb->prefix"."users";
+				  $ids = $wpdb->get_results($sql);
+				  foreach ($ids as $id)
+				  {
+					 if(user_can($id->ID,'host'))
+					 {
+						  if(get_user_meta($id->ID,'country',TRUE)== $country || get_user_meta($id->ID,'city',TRUE)== $city || get_user_meta($id->ID,'state',TRUE)== $state)
+						  {
+							  $search[] = $id->ID;
+						  }
+					 }
+				  }
+				  $host['include'] = $search;
+				  if(empty($host['include']))
+				  {
+					$flag2 = 1;    
+				  }
+			}
+		  }
+          if($_REQUEST['find'] == 1 && $country == 0 && $city == 0 && $state == 0){
+              $flag2 = 0;
+          }
+          $host ['role'] = 'host';
+          
+          $myrows =get_users($host);
+         
+          foreach ($myrows as $value) {
+             if($flag2 == 0){
+             echo '<div class="hostProfile">';
+             echo '<div class="profile"><a href="'.home_url().'/host-details?id='.base64_encode($value->ID).'"><img class="imgHost" src="'.$path['baseurl'].'/photo/'.get_user_meta($value->ID,'profile',TRUE).'"/></a></div>'; 
+             echo '<div class="user_name">'.$value->user_login.'</div>';
+             $sql= "SELECT `name` from `city` where id=".get_user_meta($value->ID,'city',TRUE);
+           //  echo $sql;
+             $cityarr=$wpdb->get_results($sql);
+             echo '<div class="user_city">'.$cityarr[0]->name.'</div>';
+             echo '</div>';
+             }   
+          }
+          if($flag2 == 1){
+              echo '<h2><font color="red">No Host Found!</font></h2>';
+          }
+          
+          
+          ?>
+      </div>
+          
+
+<?php }
+?>
